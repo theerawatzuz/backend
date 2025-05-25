@@ -60,4 +60,11 @@ export class ContentsController {
     const username = req.user.username;
     return this.contentsService.remove(+id, username);
   }
+
+  @Get('author/:username')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  findByAuthor(@Param('username') username: string) {
+    return this.contentsService.findByAuthor(username);
+  }
 }

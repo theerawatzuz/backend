@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Content } from './entities/content.entity';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
@@ -7,9 +11,9 @@ import { CommentsCounterService } from '../comments/comments-counter.service';
 @Injectable()
 export class ContentsService {
   private readonly userMapping = {
-    'john': 'John Swalobsky',
-    'lilly': 'Lilly Maha',
-    'bob': 'Bob Typonic'
+    john: 'John Swalobsky',
+    lilly: 'Lilly Maha',
+    bob: 'Bob Typonic',
   };
 
   constructor(private readonly commentsCounter: CommentsCounterService) {}
@@ -18,12 +22,13 @@ export class ContentsService {
     {
       id: 1,
       title: 'Ancient Egyptian Civilization',
-      content: 'Discover the fascinating world of ancient Egypt, from the pyramids to the pharaohs...',
+      content:
+        'Discover the fascinating world of ancient Egypt, from the pyramids to the pharaohs...',
       author: 'john',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
       category: 'History',
       time: '2025-05-20T10:00:00Z',
-      comments: 0  // This will be calculated dynamically
+      comments: 0, // This will be calculated dynamically
     },
     {
       id: 2,
@@ -33,7 +38,7 @@ export class ContentsService {
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=lilly',
       category: 'Fashion',
       time: '2025-05-21T14:30:00Z',
-      comments: 0  // This will be calculated dynamically
+      comments: 0, // This will be calculated dynamically
     },
     {
       id: 3,
@@ -43,29 +48,29 @@ export class ContentsService {
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
       category: 'Health',
       time: '2025-05-22T09:15:00Z',
-      comments: 0  // This will be calculated dynamically
-    }
+      comments: 0, // This will be calculated dynamically
+    },
   ];
 
   private nextId = 4;
 
   findAll(): Content[] {
-    return this.contents.map(content => ({
+    return this.contents.map((content) => ({
       ...content,
       comments: this.commentsCounter.getCommentCount(content.id),
-      author: this.userMapping[content.author]
+      author: this.userMapping[content.author],
     }));
   }
 
   findOne(id: number): Content | null {
-    const content = this.contents.find(c => c.id === id);
+    const content = this.contents.find((c) => c.id === id);
     if (!content) {
       return null;
     }
     return {
       ...content,
       comments: this.commentsCounter.getCommentCount(content.id),
-      author: this.userMapping[content.author]
+      author: this.userMapping[content.author],
     };
   }
 
@@ -76,17 +81,21 @@ export class ContentsService {
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
       time: new Date().toISOString(),
       comments: 0,
-      ...createContentDto
+      ...createContentDto,
     };
     this.contents.push(content);
     return {
       ...content,
-      author: this.userMapping[content.author]
+      author: this.userMapping[content.author],
     };
   }
 
-  update(id: number, username: string, updateContentDto: UpdateContentDto): Content {
-    const contentIndex = this.contents.findIndex(c => c.id === id);
+  update(
+    id: number,
+    username: string,
+    updateContentDto: UpdateContentDto,
+  ): Content {
+    const contentIndex = this.contents.findIndex((c) => c.id === id);
     if (contentIndex === -1) {
       throw new NotFoundException('Post not found');
     }
@@ -98,19 +107,19 @@ export class ContentsService {
 
     const updatedContent = {
       ...content,
-      ...updateContentDto
+      ...updateContentDto,
     };
     this.contents[contentIndex] = updatedContent;
 
     return {
       ...updatedContent,
       comments: this.commentsCounter.getCommentCount(updatedContent.id),
-      author: this.userMapping[updatedContent.author]
+      author: this.userMapping[updatedContent.author],
     };
   }
 
   remove(id: number, username: string): void {
-    const index = this.contents.findIndex(c => c.id === id);
+    const index = this.contents.findIndex((c) => c.id === id);
     if (index === -1) {
       throw new NotFoundException('Post not found');
     }
@@ -120,5 +129,15 @@ export class ContentsService {
     }
 
     this.contents.splice(index, 1);
+  }
+
+  findByAuthor(username: string): Content[] {
+    return this.contents
+      .filter((content) => content.author === username)
+      .map((content) => ({
+        ...content,
+        comments: this.commentsCounter.getCommentCount(content.id),
+        author: this.userMapping[content.author],
+      }));
   }
 }
