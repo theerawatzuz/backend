@@ -142,16 +142,23 @@ export class ContentsService {
   }
 
   filterByType(type: string, queryText: string): Content[] {
+    if (!type || !queryText) return [];
     let filtered: Content[] = [];
+    const lowerQuery = queryText.toLowerCase();
     if (type === 'author') {
       filtered = this.contents.filter(
-        (content) => content.author === queryText,
+        (content) =>
+          content.author.toLowerCase() === lowerQuery ||
+          (this.userMapping[content.author] &&
+            this.userMapping[content.author].toLowerCase() === lowerQuery),
       );
     } else if (type === 'category') {
       filtered = this.contents.filter(
-        (content) => content.category === queryText,
+        (content) => content.category.toLowerCase() === lowerQuery,
       );
     }
+    // debug log
+    // console.log('filterByType', { type, queryText, filtered });
     return filtered.map((content) => ({
       ...content,
       comments: this.commentsCounter.getCommentCount(content.id),
