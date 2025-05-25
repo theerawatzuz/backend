@@ -8,6 +8,7 @@ import {
   Delete,
   Request,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ContentsService } from './contents.service';
 import { CreateContentDto } from './dto/create-content.dto';
@@ -66,5 +67,15 @@ export class ContentsController {
   @UseGuards(JwtAuthGuard)
   findByAuthor(@Param('username') username: string) {
     return this.contentsService.findByAuthor(username);
+  }
+
+  @Get('filter')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  filterByType(
+    @Query('type') type: string,
+    @Query('queryText') queryText: string,
+  ) {
+    return this.contentsService.filterByType(type, queryText);
   }
 }

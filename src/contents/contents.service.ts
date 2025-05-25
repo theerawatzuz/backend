@@ -140,4 +140,22 @@ export class ContentsService {
         author: this.userMapping[content.author],
       }));
   }
+
+  filterByType(type: string, queryText: string): Content[] {
+    let filtered: Content[] = [];
+    if (type === 'author') {
+      filtered = this.contents.filter(
+        (content) => content.author === queryText,
+      );
+    } else if (type === 'category') {
+      filtered = this.contents.filter(
+        (content) => content.category === queryText,
+      );
+    }
+    return filtered.map((content) => ({
+      ...content,
+      comments: this.commentsCounter.getCommentCount(content.id),
+      author: this.userMapping[content.author],
+    }));
+  }
 }
