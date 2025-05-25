@@ -8,8 +8,8 @@ export class CommentsService {
     {
       id: 1,
       postId: 1,
+      author: 'lilly',
       content: 'Great insights about ancient Egypt!',
-      author: 'Lilly Maha',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=lilly',
       time: '2025-05-20T11:30:00Z',
       replies: 0
@@ -17,8 +17,8 @@ export class CommentsService {
     {
       id: 2,
       postId: 1,
+      author: 'bob',    
       content: 'Very informative article!',
-      author: 'Bob Typonic',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
       time: '2025-05-20T12:45:00Z',
       replies: 0
@@ -26,8 +26,35 @@ export class CommentsService {
     {
       id: 3,
       postId: 2,
+      author: 'john',
       content: 'These fashion trends are amazing',
-      author: 'John Swalobsky',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
+      time: '2025-05-21T15:20:00Z',
+      replies: 0
+    },
+    {
+      id: 4,
+      postId: 3,
+      author: 'john',
+      content: 'These fashion trends are amazing',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
+      time: '2025-05-21T15:20:00Z',
+      replies: 0
+    },
+    {
+      id: 5,
+      postId: 3,
+      author: 'john',   
+      content: 'These fashion trends are amazing',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
+      time: '2025-05-21T15:20:00Z',
+      replies: 0
+    },
+    {
+      id: 6,
+      postId: 3,
+      author: 'john',
+      content: 'These fashion trends are amazing',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
       time: '2025-05-21T15:20:00Z',
       replies: 0

@@ -6,4 +6,9 @@ export class CreateCommentDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  fullName: string;
 }

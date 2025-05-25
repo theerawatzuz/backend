@@ -5,7 +5,6 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  // Mock users for demonstration
   private readonly users = [
     {
       id: 1,
@@ -40,6 +39,7 @@ export class AuthService {
         id: user.id,
         username: user.username,
         fullName: user.fullName,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`,
       },
     };
   }

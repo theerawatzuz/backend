@@ -6,14 +6,14 @@ import {
   Put,
   Param,
   Delete,
-  UseGuards,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { ContentsService } from './contents.service';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -26,6 +26,8 @@ export class ContentsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.contentsService.findOne(+id);
   }
@@ -33,25 +35,28 @@ export class ContentsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  create(@Request() req, @Body() createContentDto: CreateContentDto) {
-    return this.contentsService.create(req.user.username, createContentDto);
+  create(@Body() createContentDto: CreateContentDto, @Request() req) {
+    const username = req.user.username;
+    return this.contentsService.create(username, createContentDto);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   update(
-    @Request() req,
     @Param('id') id: string,
     @Body() updateContentDto: UpdateContentDto,
+    @Request() req,
   ) {
-    return this.contentsService.update(+id, req.user.username, updateContentDto);
+    const username = req.user.username;
+    return this.contentsService.update(+id, username, updateContentDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  remove(@Request() req, @Param('id') id: string) {
-    return this.contentsService.remove(+id, req.user.username);
+  remove(@Param('id') id: string, @Request() req) {
+    const username = req.user.username;
+    return this.contentsService.remove(+id, username);
   }
 }
