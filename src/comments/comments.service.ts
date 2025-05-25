@@ -61,7 +61,7 @@ export class CommentsService {
     }
   ];
 
-  private nextId = 4;
+  private nextId = 7; // Updated to reflect actual next ID based on mock data
 
   findByPostId(postId: number): Comment[] {
     return this.comments.filter(c => c.postId === postId);

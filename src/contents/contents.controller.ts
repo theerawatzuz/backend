@@ -29,7 +29,8 @@ export class ContentsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
-    return this.contentsService.findOne(+id);
+    const content = this.contentsService.findOne(+id);
+    return content || {};
   }
 
   @Post()

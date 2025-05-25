@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { Content } from './entities/content.entity';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { CommentsCounterService } from '../comments/comments-counter.service';
 
 @Injectable()
 export class ContentsService {
@@ -11,36 +12,38 @@ export class ContentsService {
     'bob': 'Bob Typonic'
   };
 
+  constructor(private readonly commentsCounter: CommentsCounterService) {}
+
   private contents: Content[] = [
     {
       id: 1,
       title: 'Ancient Egyptian Civilization',
       content: 'Discover the fascinating world of ancient Egypt, from the pyramids to the pharaohs...',
-      author: 'john',  
+      author: 'john',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john',
       category: 'History',
       time: '2025-05-20T10:00:00Z',
-      comments: 2
+      comments: 0  // This will be calculated dynamically
     },
     {
       id: 2,
       title: 'Modern Fashion Trends',
       content: 'Exploring the latest fashion trends for summer 2025...',
-      author: 'lilly',  
+      author: 'lilly',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=lilly',
       category: 'Fashion',
       time: '2025-05-21T14:30:00Z',
-      comments: 1
+      comments: 0  // This will be calculated dynamically
     },
     {
       id: 3,
       title: 'Health and Wellness Guide',
       content: 'Tips for maintaining a healthy lifestyle in modern times...',
-      author: 'bob', 
+      author: 'bob',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
       category: 'Health',
       time: '2025-05-22T09:15:00Z',
-      comments: 3
+      comments: 0  // This will be calculated dynamically
     }
   ];
 
@@ -49,18 +52,20 @@ export class ContentsService {
   findAll(): Content[] {
     return this.contents.map(content => ({
       ...content,
-      author: this.userMapping[content.author] // Convert username to full name for display
+      comments: this.commentsCounter.getCommentCount(content.id),
+      author: this.userMapping[content.author]
     }));
   }
 
-  findOne(id: number): Content {
+  findOne(id: number): Content | null {
     const content = this.contents.find(c => c.id === id);
     if (!content) {
-      throw new NotFoundException('Post not found');
+      return null;
     }
     return {
       ...content,
-      author: this.userMapping[content.author] // Convert username to full name for display
+      comments: this.commentsCounter.getCommentCount(content.id),
+      author: this.userMapping[content.author]
     };
   }
 
@@ -76,7 +81,7 @@ export class ContentsService {
     this.contents.push(content);
     return {
       ...content,
-      author: this.userMapping[content.author] // Convert username to full name for display
+      author: this.userMapping[content.author]
     };
   }
 
@@ -99,7 +104,8 @@ export class ContentsService {
 
     return {
       ...updatedContent,
-      author: this.userMapping[updatedContent.author] // Convert username to full name for display
+      comments: this.commentsCounter.getCommentCount(updatedContent.id),
+      author: this.userMapping[updatedContent.author]
     };
   }
 
